@@ -1,0 +1,877 @@
+< !DOCTYPE html><html lang="en"><head><meta charset="UTF-8" /><title>StreamFlix – Login & Sign-up</title><meta name="viewport" content="width=device-width, initial-scale=1.0" />< !-- Google Font: Poppins --><link rel="preconnect" href="https://fonts.googleapis.com" /><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin /><link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+rel="stylesheet"
+
+/><style>
+/* ========= CSS RESET & ROOT ========= */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+:root {
+  --bg-gradient: linear-gradient(135deg, #0f5ef7 0%, #031633 100%);
+  --accent-gradient: linear-gradient(135deg, #3b82f6 0%, #06b6d4 100%);
+  --card-bg: rgba(255, 255, 255, 0.14);
+  --input-bg: rgba(255, 255, 255, 0.18);
+  --border-color: rgba(255, 255, 255, 0.2);
+  --text-main: #f9fafb;
+  --text-muted: #9ca3af;
+  --danger: #ef4444;
+  --shadow-soft: 0 24px 60px rgba(15, 23, 42, 0.4);
+  --transition-fast: 0.2s ease-out;
+  --transition-slow: 0.4s ease;
+
+  --radius-lg: 20px;
+  --radius-full: 999px;
+}
+
+body {
+  font-family: "Poppins", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  min-height: 100vh;
+  color: var(--text-main);
+  background: radial-gradient(circle at top left, #0b1220 0%, #020617 45%, #000 100%);
+  display: flex;
+  align-items: stretch;
+  justify-content: center;
+  -webkit-font-smoothing: antialiased;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+button {
+  font-family: inherit;
+  border: none;
+  background: none;
+  cursor: pointer;
+}
+
+/* ========= LAYOUT ========= */
+.page-wrapper {
+  width: 100%;
+  max-width: 1200px;
+  margin: 24px;
+  border-radius: 28px;
+  overflow: hidden;
+  display: flex;
+  min-height: min(760px, 90vh);
+  background: radial-gradient(circle at top left, rgba(59, 130, 246, 0.4), transparent 60%);
+  position: relative;
+  isolation: isolate;
+}
+
+/* Left side (hero) */
+.hero {
+  flex: 1.1;
+  padding: 56px 48px;
+  background: radial-gradient(circle at top left, #1d4ed8, #020618 55%, #000 100%);
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  color: white;
+}
+
+/* Abstract 3D/blur shapes */
+.hero::before,
+.hero::after {
+  content: "";
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(40px);
+  opacity: 0.75;
+  mix-blend-mode: screen;
+  pointer-events: none;
+}
+
+.hero::before {
+  width: 420px;
+  height: 420px;
+  background: radial-gradient(circle, #38bdf8 0%, transparent 60%);
+  top: -120px;
+  right: -80px;
+}
+
+.hero::after {
+  width: 380px;
+  height: 380px;
+  background: radial-gradient(circle, #4f46e5 0%, transparent 60%);
+  bottom: -120px;
+  left: -60px;
+}
+
+.hero-content {
+  position: relative;
+  z-index: 1;
+  max-width: 460px;
+}
+
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 14px;
+  border-radius: 999px;
+  background: rgba(15, 23, 42, 0.6);
+  border: 1px solid rgba(148, 163, 184, 0.6);
+  backdrop-filter: blur(22px);
+  -webkit-backdrop-filter: blur(22px);
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: #e5e7eb;
+  margin-bottom: 22px;
+}
+
+.badge-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 999px;
+  background: radial-gradient(circle, #22c55e 0%, #15803d 60%, #052e16 100%);
+  box-shadow: 0 0 16px rgba(34, 197, 94, 0.7);
+}
+
+.hero-title {
+  font-size: clamp(30px, 3vw + 10px, 40px);
+  line-height: 1.1;
+  font-weight: 700;
+  margin-bottom: 18px;
+}
+
+.hero-subtitle {
+  font-size: 16px;
+  line-height: 1.6;
+  color: rgba(226, 232, 240, 0.85);
+  margin-bottom: 32px;
+}
+
+.hero-highlights {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 14px;
+  margin-bottom: 32px;
+}
+
+.hero-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 14px;
+  border-radius: 999px;
+  background: rgba(15, 23, 42, 0.7);
+  border: 1px solid rgba(148, 163, 184, 0.6);
+  font-size: 12px;
+  color: #e5e7eb;
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+}
+
+.hero-pill span {
+  display: inline-flex;
+  width: 18px;
+  height: 18px;
+  align-items: center;
+  justify-content: center;
+  border-radius: 999px;
+  background: rgba(59, 130, 246, 0.2);
+  border: 1px solid rgba(96, 165, 250, 0.7);
+  font-size: 11px;
+}
+
+.hero-meta {
+  display: flex;
+  gap: 24px;
+  align-items: center;
+  color: rgba(209, 213, 219, 0.85);
+  font-size: 13px;
+}
+
+.hero-meta strong {
+  font-weight: 600;
+  color: #e5e7eb;
+}
+
+/* Right side (auth card wrapper) */
+.auth-pane {
+  flex: 0.9;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 32px 40px;
+  position: relative;
+  overflow: hidden;
+}
+
+/* ========= GLASS CARD ========= */
+.auth-card {
+  width: 100%;
+  max-width: 420px;
+  border-radius: var(--radius-lg);
+  padding: 26px 26px 30px;
+  background: radial-gradient(circle at top left, rgba(255, 255, 255, 0.24), rgba(15, 23, 42, 0.9));
+  background-color: var(--card-bg);
+  box-shadow: var(--shadow-soft);
+  border: 1px solid rgba(148, 163, 184, 0.45);
+  backdrop-filter: blur(26px);
+  -webkit-backdrop-filter: blur(26px);
+  color: #e5e7eb;
+  position: relative;
+  overflow: hidden;
+  animation: card-fade-in 0.7s var(--transition-slow) forwards;
+  opacity: 0;
+  transform: translateY(16px) scale(0.99);
+}
+
+.auth-card::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at top left, rgba(255, 255, 255, 0.34), transparent 55%);
+  opacity: 0.25;
+  pointer-events: none;
+}
+
+.auth-card-inner {
+  position: relative;
+  z-index: 1;
+}
+
+@keyframes card-fade-in {
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+/* ========= TABS / TOGGLE ========= */
+.auth-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 22px;
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.brand-logo {
+  width: 28px;
+  height: 28px;
+  border-radius: 9px;
+  background: conic-gradient(from 160deg, #0ea5e9, #4f46e5, #ec4899, #0ea5e9);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 0 18px rgba(59, 130, 246, 0.9);
+}
+
+.brand-logo-inner {
+  width: 18px;
+  height: 18px;
+  border-radius: 6px;
+  background: radial-gradient(circle at 20% 20%, #020617, #020617 55%, #0f172a 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #f9fafb;
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.brand-text {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.brand-text-main {
+  font-size: 15px;
+  font-weight: 600;
+}
+
+.brand-text-sub {
+  font-size: 11px;
+  color: var(--text-muted);
+}
+
+.auth-tabs {
+  margin-top: 14px;
+  display: flex;
+  position: relative;
+  border-radius: 999px;
+  background: rgba(15, 23, 42, 0.7);
+  border: 1px solid rgba(148, 163, 184, 0.4);
+  padding: 3px;
+  overflow: hidden;
+}
+
+.auth-tab {
+  flex: 1;
+  padding: 8px 10px;
+  font-size: 13px;
+  font-weight: 500;
+  text-align: center;
+  position: relative;
+  color: var(--text-muted);
+  z-index: 1;
+  transition: color var(--transition-fast);
+}
+
+.auth-tab.active {
+  color: #e5e7eb;
+}
+
+.auth-tabs-indicator {
+  position: absolute;
+  top: 3px;
+  bottom: 3px;
+  width: 50%;
+  border-radius: 999px;
+  background: linear-gradient(140deg, #1d4ed8, #38bdf8);
+  box-shadow: 0 8px 24px rgba(37, 99, 235, 0.7);
+  transition: transform var(--transition-slow);
+}
+
+.auth-card.signup-active .auth-tabs-indicator {
+  transform: translateX(100%);
+}
+
+/* ========= FORM SLIDER ========= */
+.forms-viewport {
+  position: relative;
+  overflow: hidden;
+  margin-top: 18px;
+}
+
+.forms-slider {
+  display: flex;
+  width: 200%;
+  transition: transform 0.5s cubic-bezier(0.25, 0.8, 0.25, 1);
+}
+
+.auth-card.signup-active .forms-slider {
+  transform: translateX(-50%);
+}
+
+form.auth-form {
+  width: 50%;
+  padding-right: 6px;
+  padding-top: 6px;
+  padding-bottom: 2px;
+}
+
+/* ========= FORM FIELDS ========= */
+.field-group {
+  margin-bottom: 14px;
+}
+
+.field-label {
+  font-size: 12px;
+  margin-bottom: 6px;
+  color: #e5e7eb;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.field-label span.secondary {
+  font-size: 11px;
+  color: var(--text-muted);
+}
+
+.input-wrapper {
+  position: relative;
+}
+
+.input-field {
+  width: 100%;
+  padding: 10px 12px;
+  padding-right: 40px;
+  border-radius: 12px;
+  border: 1px solid var(--border-color);
+  background: radial-gradient(circle at top left, rgba(148, 163, 184, 0.35), rgba(15, 23, 42, 0.95));
+  background-color: var(--input-bg);
+  color: #e5e7eb;
+  font-size: 13px;
+  outline: none;
+  transition: border-color var(--transition-fast), box-shadow var(--transition-fast), background-color var(--transition-fast), transform var(--transition-fast);
+}
+
+.input-field::placeholder {
+  color: rgba(148, 163, 184, 0.8);
+}
+
+.input-field:focus {
+  border-color: rgba(59, 130, 246, 0.9);
+  box-shadow: 0 0 0 1px rgba(37, 99, 235, 0.6), 0 12px 30px rgba(15, 23, 42, 0.8);
+  background-color: rgba(15, 23, 42, 0.9);
+  transform: translateY(-1px);
+}
+
+/* Password toggle icon */
+.password-toggle {
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 26px;
+  height: 26px;
+  border-radius: 999px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: radial-gradient(circle at 30% 20%, rgba(248, 250, 252, 0.7), rgba(15, 23, 42, 0.9));
+  border: 1px solid rgba(148, 163, 184, 0.5);
+  cursor: pointer;
+  transition: background var(--transition-fast), transform var(--transition-fast), box-shadow var(--transition-fast), border-color var(--transition-fast);
+}
+
+.password-toggle svg {
+  width: 14px;
+  height: 14px;
+  stroke: #64748b;
+  transition: stroke var(--transition-fast), opacity var(--transition-fast);
+}
+
+.password-toggle.visible {
+  border-color: rgba(59, 130, 246, 0.9);
+  box-shadow: 0 0 16px rgba(59, 130, 246, 0.7);
+  transform: translateY(-50%) scale(1.06);
+}
+
+.password-toggle.visible svg {
+  stroke: #e5e7eb;
+}
+
+/* Remember / Forgot row */
+.form-meta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin: 6px 0 14px;
+  font-size: 12px;
+}
+
+.checkbox {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  cursor: pointer;
+  color: var(--text-muted);
+}
+
+.checkbox input {
+  width: 14px;
+  height: 14px;
+  border-radius: 4px;
+  border: 1px solid rgba(148, 163, 184, 0.8);
+  background: rgba(15, 23, 42, 0.6);
+  accent-color: #2563eb;
+}
+
+.form-meta a {
+  color: #93c5fd;
+  text-decoration: none;
+  position: relative;
+}
+
+.form-meta a::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: -2px;
+  width: 100%;
+  height: 1px;
+  background: linear-gradient(90deg, rgba(96, 165, 250, 0.1), rgba(96, 165, 250, 0.9), rgba(96, 165, 250, 0.1));
+  transform-origin: right;
+  transform: scaleX(0);
+  transition: transform var(--transition-fast);
+}
+
+.form-meta a:hover::after {
+  transform-origin: left;
+  transform: scaleX(1);
+}
+
+/* ========= PRIMARY BUTTON ========= */
+.primary-btn {
+  width: 100%;
+  border-radius: var(--radius-full);
+  padding: 11px 16px;
+  font-size: 14px;
+  font-weight: 600;
+  color: #f9fafb;
+  background-image: var(--accent-gradient);
+  box-shadow: 0 16px 40px rgba(37, 99, 235, 0.6);
+  position: relative;
+  overflow: hidden;
+  transition: transform 0.18s ease-out, box-shadow 0.18s ease-out, filter 0.18s ease-out;
+}
+
+.primary-btn::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at 15% 0, rgba(239, 246, 255, 0.6), transparent 55%);
+  opacity: 0.7;
+  pointer-events: none;
+  mix-blend-mode: screen;
+}
+
+.primary-btn:hover {
+  transform: translateY(-1px) scale(1.01);
+  box-shadow: 0 22px 55px rgba(37, 99, 235, 0.8);
+  filter: brightness(1.03);
+}
+
+.primary-btn:active {
+  transform: translateY(0) scale(0.99);
+  box-shadow: 0 14px 34px rgba(30, 64, 175, 0.9);
+}
+
+.primary-btn span {
+  position: relative;
+  z-index: 1;
+}
+
+/* ========= SOCIAL LOGIN ========= */
+.social-section {
+  margin-top: 18px;
+}
+
+.social-label {
+  text-align: center;
+  font-size: 11px;
+  color: var(--text-muted);
+  margin-bottom: 10px;
+  position: relative;
+}
+
+.social-label::before,
+.social-label::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  width: 32%;
+  height: 1px;
+  background: linear-gradient(90deg, rgba(148, 163, 184, 0.15), rgba(148, 163, 184, 0.6), rgba(148, 163, 184, 0.15));
+}
+
+.social-label::before {
+  left: 0;
+}
+
+.social-label::after {
+  right: 0;
+}
+
+.social-buttons {
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+}
+
+.social-btn {
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: radial-gradient(circle at 20% 20%, rgba(248, 250, 252, 0.9), rgba(15, 23, 42, 0.95));
+  border: 1px solid rgba(148, 163, 184, 0.7);
+  box-shadow: 0 10px 30px rgba(15, 23, 42, 0.9);
+  transition: transform var(--transition-fast), box-shadow var(--transition-fast), border-color var(--transition-fast), background var(--transition-fast);
+}
+
+.social-btn span {
+  font-size: 18px;
+}
+
+.social-btn.google span {
+  color: #ea4335;
+  font-weight: 600;
+}
+
+.social-btn.facebook span {
+  color: #1877f2;
+  font-weight: 700;
+}
+
+.social-btn.apple span {
+  color: #020617;
+  font-weight: 700;
+}
+
+.social-btn:hover {
+  transform: translateY(-2px) scale(1.03);
+  border-color: rgba(59, 130, 246, 0.9);
+  box-shadow: 0 20px 45px rgba(15, 23, 42, 0.95);
+  background: radial-gradient(circle at 10% 0, rgba(248, 250, 252, 1), rgba(15, 23, 42, 0.96));
+}
+
+.social-btn:active {
+  transform: translateY(0) scale(0.98);
+  box-shadow: 0 12px 26px rgba(15, 23, 42, 0.9);
+}
+
+/* ========= FOOTNOTE ========= */
+.form-footer {
+  margin-top: 12px;
+  font-size: 11px;
+  color: var(--text-muted);
+  text-align: center;
+}
+
+.form-footer a {
+  color: #bfdbfe;
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 3px;
+}
+
+/* ========= RESPONSIVE ========= */
+@media (max-width: 960px) {
+  .page-wrapper {
+    margin: 16px;
+  }
+
+  .hero {
+    padding: 40px 32px;
+  }
+
+  .auth-pane {
+    padding: 28px 28px;
+  }
+
+  .auth-card {
+    max-width: 380px;
+  }
+}
+
+@media (max-width: 768px) {
+  .page-wrapper {
+    flex-direction: column;
+    min-height: auto;
+    max-width: 480px;
+    margin: 12px auto;
+  }
+
+  .hero {
+    min-height: 200px;
+    padding: 22px 20px 18px;
+  }
+
+  .hero::before,
+  .hero::after {
+    display: none;
+    /* hide abstract shapes on mobile */
+  }
+
+  .hero-subtitle {
+    font-size: 14px;
+    margin-bottom: 18px;
+  }
+
+  .hero-highlights {
+    display: none;
+    /* simplify mobile hero */
+  }
+
+  .hero-meta {
+    font-size: 11px;
+  }
+
+  .auth-pane {
+    padding: 18px 16px 22px;
+  }
+
+  .auth-card {
+    border-radius: 18px;
+    padding: 22px 18px 22px;
+  }
+
+  form.auth-form {
+    padding-right: 0;
+  }
+
+  .social-label::before,
+  .social-label::after {
+    width: 25%;
+  }
+}
+
+@media (max-width: 480px) {
+  .hero {
+    min-height: 170px;
+  }
+
+  .hero-title {
+    font-size: 22px;
+  }
+
+  .badge {
+    margin-bottom: 14px;
+  }
+
+  .auth-card {
+    padding: 18px 14px 20px;
+  }
+
+  .auth-tabs {
+    font-size: 12px;
+  }
+
+  .social-buttons {
+    gap: 10px;
+  }
+
+  .social-btn {
+    width: 34px;
+    height: 34px;
+  }
+}
+
+</style></head><body><main class="page-wrapper">< !-- LEFT HERO SECTION --><section class="hero"><div class="hero-content"><div class="badge"><span class="badge-dot"></span><span>StreamFlix · Secure Access</span></div><h1 class="hero-title">Simple Web Login &amp;
+Sign-up Page </h1><p class="hero-subtitle">Welcome to <strong>StreamFlix</strong>– Unlimited Movies &amp;
+Entertainment,
+on all your devices,
+in one beautiful glassmorphism experience. </p><div class="hero-highlights"><div class="hero-pill"><span>4K</span>Cinematic streaming quality </div><div class="hero-pill"><span>∞</span>Unlimited shows &amp;
+movies </div><div class="hero-pill"><span>★</span>Personalized recommendations </div></div><div class="hero-meta"><div><strong>Premium UI</strong><br />Inspired by Netflix,
+Apple &amp;
+modern SaaS. </div><div><strong>Secure Login</strong><br />Encrypted sessions &amp;
+smart protection. </div></div></div></section>< !-- RIGHT AUTH SECTION --><section class="auth-pane"><div class="auth-card" id="authCard"><div class="auth-card-inner">< !-- Brand / Mini header --><header class="auth-header"><div class="brand"><div class="brand-logo"><div class="brand-logo-inner">SF</div></div><div class="brand-text"><div class="brand-text-main">StreamFlix</div><div class="brand-text-sub">Sign in to continue</div></div></div></header>< !-- Tabs --><div class="auth-tabs"><div class="auth-tabs-indicator" id="tabsIndicator"></div><button class="auth-tab active" data-tab="login" id="loginTab">Login</button><button class="auth-tab" data-tab="signup" id="signupTab">Sign Up</button></div>< !-- Forms slider --><div class="forms-viewport"><div class="forms-slider" id="formsSlider">< !-- LOGIN FORM --><form class="auth-form" id="loginForm" autocomplete="on"><div class="field-group"><label class="field-label" for="loginEmail">Email address <span class="secondary">Use your registered email</span></label><div class="input-wrapper"><input id="loginEmail"
+type="email"
+class="input-field"
+placeholder="you@example.com"
+required /></div></div><div class="field-group"><label class="field-label" for="loginPassword">Password <span class="secondary">Min. 8 characters</span></label><div class="input-wrapper"><input id="loginPassword"
+type="password"
+class="input-field"
+placeholder="Enter your password"
+required /><button type="button"
+class="password-toggle"
+aria-label="Show password"
+><svg viewBox="0 0 24 24" fill="none"><path d="M2.5 12.2C3.7 8.9 7 6.5 11 6.5c4 0 7.3 2.4 8.5 5.7-1.2 3.3-4.5 5.7-8.5 5.7-4 0-7.3-2.4-8.5-5.7Z"
+stroke-width="1.6"
+stroke-linecap="round"
+stroke-linejoin="round"
+/><circle cx="11"
+cy="12.2"
+r="2.6"
+stroke-width="1.6"
+stroke-linecap="round"
+stroke-linejoin="round"
+/></svg></button></div></div><div class="form-meta"><label class="checkbox"><input type="checkbox" id="rememberMe" /><span>Remember me</span></label><a href="#" title="Reset your password">Forgot password?</a></div><button type="submit" class="primary-btn"><span>Continue to StreamFlix</span></button><div class="social-section"><div class="social-label">Or continue with</div><div class="social-buttons"><button class="social-btn google" type="button" aria-label="Continue with Google"><span>G</span></button><button class="social-btn facebook" type="button" aria-label="Continue with Facebook"><span>f</span></button><button class="social-btn apple" type="button" aria-label="Continue with Apple"><span></span></button></div></div><div class="form-footer">New to StreamFlix? <a href="#" id="switchToSignupLink">Create an account</a></div></form>< !-- SIGNUP FORM --><form class="auth-form" id="signupForm" autocomplete="on"><div class="field-group"><label class="field-label" for="signupEmail">Email address <span class="secondary">We&apos;
+ll send a confirmation link</span></label><div class="input-wrapper"><input id="signupEmail"
+type="email"
+class="input-field"
+placeholder="you@example.com"
+required /></div></div><div class="field-group"><label class="field-label" for="signupPassword">Password <span class="secondary">Use at least 8 characters</span></label><div class="input-wrapper"><input id="signupPassword"
+type="password"
+class="input-field"
+placeholder="Create a password"
+required /><button type="button"
+class="password-toggle"
+aria-label="Show password"
+><svg viewBox="0 0 24 24" fill="none"><path d="M2.5 12.2C3.7 8.9 7 6.5 11 6.5c4 0 7.3 2.4 8.5 5.7-1.2 3.3-4.5 5.7-8.5 5.7-4 0-7.3-2.4-8.5-5.7Z"
+stroke-width="1.6"
+stroke-linecap="round"
+stroke-linejoin="round"
+/><circle cx="11"
+cy="12.2"
+r="2.6"
+stroke-width="1.6"
+stroke-linecap="round"
+stroke-linejoin="round"
+/></svg></button></div></div><div class="field-group"><label class="field-label" for="signupConfirmPassword">Confirm password <span class="secondary">Re-enter to confirm</span></label><div class="input-wrapper"><input id="signupConfirmPassword"
+type="password"
+class="input-field"
+placeholder="Re-enter your password"
+required /></div></div><div class="form-meta"><label class="checkbox"><input type="checkbox" id="terms" required /><span>I agree to the Terms &amp;
+Privacy</span></label></div><button type="submit" class="primary-btn"><span>Create your StreamFlix account</span></button><div class="social-section"><div class="social-label">Or sign up with</div><div class="social-buttons"><button class="social-btn google" type="button" aria-label="Sign up with Google"><span>G</span></button><button class="social-btn facebook" type="button" aria-label="Sign up with Facebook"><span>f</span></button><button class="social-btn apple" type="button" aria-label="Sign up with Apple"><span></span></button></div></div><div class="form-footer">Already have an account? <a href="#" id="switchToLoginLink">Back to login</a></div></form></div></div></div></div></section></main><script> // Tab & form toggle logic
+
+(function () {
+    const authCard=document.getElementById("authCard");
+    const loginTab=document.getElementById("loginTab");
+    const signupTab=document.getElementById("signupTab");
+    const switchToSignupLink=document.getElementById("switchToSignupLink");
+    const switchToLoginLink=document.getElementById("switchToLoginLink");
+
+    function setActiveTab(tab) {
+      const isSignup=tab==="signup";
+      authCard.classList.toggle("signup-active", isSignup);
+
+      if (isSignup) {
+        signupTab.classList.add("active");
+        loginTab.classList.remove("active");
+      }
+
+      else {
+        loginTab.classList.add("active");
+        signupTab.classList.remove("active");
+      }
+    }
+
+    loginTab.addEventListener("click", function () {
+        setActiveTab("login");
+      });
+
+    signupTab.addEventListener("click", function () {
+        setActiveTab("signup");
+      });
+
+    if (switchToSignupLink) {
+      switchToSignupLink.addEventListener("click", function (e) {
+          e.preventDefault();
+          setActiveTab("signup");
+        });
+    }
+
+    if (switchToLoginLink) {
+      switchToLoginLink.addEventListener("click", function (e) {
+          e.preventDefault();
+          setActiveTab("login");
+        });
+    }
+
+    // Password show/hide toggles
+    document.querySelectorAll(".password-toggle").forEach(function (toggleBtn) {
+        toggleBtn.addEventListener("click", function () {
+            const input=this.parentElement.querySelector("input");
+            const isVisible=input.type==="text";
+            input.type=isVisible ? "password" : "text";
+            this.classList.toggle("visible", !isVisible);
+            this.setAttribute("aria-label", isVisible ? "Show password" : "Hide password");
+          });
+      });
+
+    // Prevent default form submit (demo mode)
+    const loginForm=document.getElementById("loginForm");
+    const signupForm=document.getElementById("signupForm");
+
+    if (loginForm) {
+      loginForm.addEventListener("submit", function (e) {
+          e.preventDefault();
+          // Placeholder: integrate with your auth logic here
+          alert("Login submitted (hook up backend auth here).");
+        });
+    }
+
+    if (signupForm) {
+      signupForm.addEventListener("submit", function (e) {
+          e.preventDefault();
+          // Placeholder: integrate with your signup logic here
+          alert("Sign-up submitted (hook up backend logic here).");
+        });
+    }
+  })();
+</script></body></html>
